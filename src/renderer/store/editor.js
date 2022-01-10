@@ -7,6 +7,7 @@ import { hasKeys, getUniqueId } from '../util'
 import listToTree from '../util/listToTree'
 import { createDocumentState, getOptionsFromState, getSingleFileState, getBlankFileState } from './help'
 import notice from '../services/notification'
+// import log from 'electron-log'
 import {
   FileEncodingCommand,
   LineEndingCommand,
@@ -1016,6 +1017,8 @@ const actions = {
     }
 
     const timer = setTimeout(() => {
+      // log.info('AUTO_SAVE:')
+      // bus.$emit('invalidate-image-cache')
       autoSaveTimers.delete(id)
 
       // Validate that the tab still exists. A tab is unchanged until successfully saved
@@ -1222,6 +1225,12 @@ const actions = {
   LISTEN_WINDOW_ZOOM () {
     ipcRenderer.on('mt::window-zoom', (e, zoomFactor) => {
       webFrame.setZoomFactor(zoomFactor)
+    })
+  },
+
+  LISTEN_FOR_RELOAD_IMAGES () {
+    ipcRenderer.on('mt::invalidate-image-cache', (e) => {
+      bus.$emit('invalidate-image-cache')
     })
   }
 }

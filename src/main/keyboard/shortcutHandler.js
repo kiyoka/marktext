@@ -105,6 +105,7 @@ class Keybindings {
       ['view.toggle-tabbar', 'CmdOrCtrl+Alt+B'],
       ['view.toggle-dev-tools', 'CmdOrCtrl+Alt+I'],
       ['view.dev-reload', 'CmdOrCtrl+R'],
+      ['view.reload-images', isOsx ? 'Ctrl+Command+R' : 'F5'],
 
       // Misc
       ['tabs.cycle-forward', 'CmdOrCtrl+Tab'],

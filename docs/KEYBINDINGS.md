@@ -138,6 +138,7 @@ Here is an example:
 | `view.toggle-toc` .     | <kbd>CmdOrCtrl</kbd>+<kbd>K</kbd>                  | Toggle table of contents                 |
 | `view.toggle-dev-tools` | <kbd>CmdOrCtrl</kbd>+<kbd>Alt</kbd>+<kbd>I</kbd>   | Toggle developer tools (debug mode only) |
 | `view.dev-reload`       | <kbd>CmdOrCtrl</kbd>+<kbd>R</kbd>                  | Reload window (debug mode only)          |
+| `view.reload-images`    | <kbd>F5</kbd>                                      | Reload images (or <kbd>Ctrl</kbd>+<kbd>Command</kbd>+<kbd>R</kbd> on macOS) |
 
 **Misc**
 
