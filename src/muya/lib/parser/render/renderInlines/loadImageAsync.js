@@ -11,7 +11,7 @@ export default function loadImageAsync (imageInfo, attrs, className, imageClass)
   let h
   let domsrc
 
-  var reload = false
+  let reload = false
   if (this.loadImageMap.has(src)) {
     const imageInfo = this.loadImageMap.get(src)
     if (imageInfo.dispMsec !== imageInfo.touchMsec) {
@@ -27,8 +27,8 @@ export default function loadImageAsync (imageInfo, attrs, className, imageClass)
       .then(({ url, width, height }) => {
         const imageText = document.querySelector(`#${id}`)
         const img = document.createElement('img')
-        var dispMsec = Date.now()
-        var touchMsec = dispMsec
+        let dispMsec = Date.now()
+        let touchMsec = dispMsec
         domsrc = url + '?msec=' + dispMsec
         img.src = domsrc
         log.info('img.src:' + img.src)
