@@ -139,12 +139,12 @@ export const adjustCursor = (cursor, preline, line, nextline) => {
   if (/[*+-]\s.+/.test(line) && newCursor.ch <= 1) {
     newCursor.ch = 2
   }
+
   // Need to adjust the cursor when cursor at blank line or in a line contains HTML tag.
   // set the newCursor to null, the new cursor will at the last line of document.
   if (!/\S/.test(line) || /<\/?([a-zA-Z\d-]+)(?=\s|>).*>/.test(line)) {
     newCursor = null
   }
-
   return newCursor
 }
 
@@ -153,8 +153,8 @@ export const animatedScrollTo = function (element, to, duration, callback) {
   const change = to - start
   const animationStart = +new Date()
 
-  // Prevent animation on small steps
-  if (Math.abs(change) <= 6) {
+  // Prevent animation on small steps or duration is 0
+  if (Math.abs(change) <= 6 || duration === 0) {
     element.scrollTop = to
     return
   }

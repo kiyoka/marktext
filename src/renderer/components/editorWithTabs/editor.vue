@@ -1311,6 +1311,7 @@ export default {
     height: 100%;
     overflow: auto;
     box-sizing: border-box;
+    cursor: default;
   }
 
   .typewriter .editor-component {

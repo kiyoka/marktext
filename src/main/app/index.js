@@ -1,5 +1,5 @@
 import path from 'path'
-import fse from 'fs-extra'
+import fsPromises from 'fs/promises'
 import { exec } from 'child_process'
 import dayjs from 'dayjs'
 import log from 'electron-log'
@@ -444,7 +444,7 @@ class App {
             // Write screenshot image into screenshot folder.
             const image = clipboard.readImage()
             const bufferImage = image.toPNG()
-            await fse.writeFile(screenshotFileName, bufferImage)
+            await fsPromises.writeFile(screenshotFileName, bufferImage)
           } catch (err) {
             log.error(err)
           }
@@ -560,6 +560,11 @@ class App {
       const { keybindings } = this._accessor
       // Convert map to object
       win.webContents.send('mt::keybindings-response', Object.fromEntries(keybindings.keys))
+    })
+
+    ipcMain.on('mt::open-keybindings-config', () => {
+      const { keybindings } = this._accessor
+      keybindings.openConfigInFileManager()
     })
   }
 }
