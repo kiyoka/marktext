@@ -29,7 +29,11 @@ export default function loadImageAsync (imageInfo, attrs, className, imageClass)
         const img = document.createElement('img')
         let dispMsec = Date.now()
         let touchMsec = dispMsec
-        domsrc = url + '?msec=' + dispMsec
+        if (/^file:\/\//.test(src)) {
+          domsrc = url + '?msec=' + dispMsec
+        } else {
+          domsrc = url
+        }
         img.src = domsrc
         log.info('img.src:' + img.src)
         if (attrs.alt) img.alt = attrs.alt.replace(/[`*{}[\]()#+\-.!_>~:|<>$]/g, '')
