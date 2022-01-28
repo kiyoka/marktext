@@ -1,5 +1,4 @@
 import path from 'path'
-import normalizePath from 'normalize-path'
 import crypto from 'crypto'
 import { clipboard } from 'electron'
 import fs from 'fs-extra'
