@@ -106,6 +106,7 @@
     <a href="https://github.com/marktext/marktext/graphs/contributors">
       contributors
     </a>
+    .
   </sub>
 </div>
 
@@ -173,7 +174,7 @@ Names and company logos of all sponsors (from both Patreon and Open Collective) 
 - Output **HTML** and **PDF** files.
 - Various themes: **Cadmium Light**, **Material Dark** etc.
 - Various editing modes: **Source Code mode**, **Typewriter mode**, **Focus mode**.
-- Paste images directly from clipboard
+- Paste images directly from clipboard.
 
 <h4 align="center">:crescent_moon:themes:high_brightness:</h4>
 
@@ -221,7 +222,7 @@ Simply download and install **MarkText** via setup wizard (`marktext-setup-%vers
 
 Alternatively, install MarkText using a package manager such as [Chocolatey](https://chocolatey.org/) or [Winget](https://docs.microsoft.com/en-us/windows/package-manager/winget/). 
 
-  - To use Chocolatey you need to have [Chocolatey](https://chocolatey.org/install) installed.
+  - To use Chocolatey, you need to have [Chocolatey](https://chocolatey.org/install) installed.
 
   ```bash
   choco install marktext
@@ -261,7 +262,7 @@ MarkText is in development, please make sure to read the [Contributing Guide](CO
 
 ## Contributors
 
-Thank you to all the people who have already contributed to MarkText[[contributors](https://github.com/marktext/marktext/graphs/contributors)]
+Thank you to all the people who have already contributed to MarkText[[contributors](https://github.com/marktext/marktext/graphs/contributors)].
 
 Special thanks to @[Yasujizr](https://github.com/Yasujizr) who designed the MarkText logo.
 

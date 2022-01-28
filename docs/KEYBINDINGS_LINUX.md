@@ -43,7 +43,6 @@ MarkText key bindings for Linux. Please see [general key bindings](KEYBINDINGS.m
 | `edit.find-previous`      | <kbd>Shift</kbd>+<kbd>F3</kbd>                | Continue the search and find the previous match |
 | `edit.replace`            | <kbd>Ctrl</kbd>+<kbd>R</kbd>                  | Replace the information with a replacement      |
 | `edit.find-in-folder`     | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>F</kbd> | Find files contain the keyword in opend folder  |
-| `edit.aidou`              | <kbd>Ctrl</kbd>+<kbd>/</kbd>                  | Show Aidou dialog                               |
 
 #### Paragraph menu
 
@@ -110,6 +109,7 @@ MarkText key bindings for Linux. Please see [general key bindings](KEYBINDINGS.m
 | `view.toggle-toc` .     | <kbd>Ctrl</kbd>+<kbd>K</kbd>                  | Toggle table of contents                 |
 | `view.toggle-dev-tools` | <kbd>Ctrl</kbd>+<kbd>Alt</kbd>+<kbd>I</kbd>   | Toggle developer tools (debug mode only) |
 | `view.dev-reload`       | <kbd>Ctrl</kbd>+<kbd>F5</kbd>                 | Reload window (debug mode only)          |
+| `view.reload-images`    | <kbd>F5</kbd>                                 | Reload images                            |
 
 ## Available key bindings
 

@@ -38,7 +38,6 @@ export default new Map([
   ['edit.find-previous', 'Cmd+Shift+G'],
   ['edit.replace', 'Command+Alt+F'],
   ['edit.find-in-folder', 'Shift+Command+F'],
-  ['edit.aidou', 'Command+/'],
   ['edit.screenshot', 'Command+Alt+A'], // macOS only
 
   // Paragraph menu
@@ -93,7 +92,8 @@ export default new Map([
   ['view.toggle-toc', 'Command+K'],
   ['view.toggle-tabbar', 'Command+Alt+B'],
   ['view.toggle-dev-tools', 'Command+Alt+I'],
-  ['view.dev-reload', 'Command+R'],
+  ['view.dev-reload', 'Command+Alt+R'],
+  ['view.reload-images', 'Command+R'],
 
   // ======== Not included in application menu ========================
   ['tabs.cycle-forward', 'Ctrl+Tab'],
