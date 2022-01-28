@@ -513,7 +513,7 @@ const commands = [
       getCurrentWindow().minimize()
     }
   }, {
-    id: 'window.always-on-top',
+    id: 'window.toggle-always-on-top',
     description: 'Window: Always on Top',
     execute: async () => {
       ipcRenderer.send('mt::window-toggle-always-on-top')
@@ -530,6 +530,7 @@ const commands = [
   {
     id: 'file.zoom',
     description: 'Window: Zoom...',
+    shortcut: [(isOsx ? 'Cmd' : 'Ctrl'), 'Scroll'],
     subcommands: [{
       id: 'file.zoom-0',
       description: '0.625',
@@ -677,31 +678,31 @@ const commands = [
   },
 
   // --------------------------------------------------------------------------
-  // Mark Text
+  // MarkText
 
   {
     id: 'file.preferences',
-    description: 'Mark Text: Preferences',
+    description: 'MarkText: Preferences',
     execute: async () => {
       ipcRenderer.send('mt::open-setting-window')
     }
   }, {
     id: 'file.quit',
-    description: 'Mark Text: Quit',
+    description: 'MarkText: Quit',
     execute: async () => {
       ipcRenderer.send('mt::app-try-quit')
     }
   }, {
     id: 'docs.user-guide',
-    description: 'Mark Text: End User Guide',
+    description: 'MarkText: End User Guide',
     execute: async () => {
-      shell.openExternal('https://github.com/marktext/marktext/blob/develop/docs/README.md')
+      shell.openExternal('https://github.com/marktext/marktext/blob/master/docs/README.md')
     }
   }, {
     id: 'docs.markdown-syntax',
-    description: 'Mark Text: Markdown Syntax Guide',
+    description: 'MarkText: Markdown Syntax Guide',
     execute: async () => {
-      shell.openExternal('https://github.com/marktext/marktext/blob/develop/docs/MARKDOWN_SYNTAX.md')
+      shell.openExternal('https://github.com/marktext/marktext/blob/master/docs/MARKDOWN_SYNTAX.md')
     }
   },
 
@@ -726,7 +727,7 @@ const commands = [
 if (isUpdatable()) {
   commands.push({
     id: 'file.check-update',
-    description: 'Mark Text: Check for Updates',
+    description: 'MarkText: Check for Updates',
     execute: async () => {
       ipcRenderer.send('mt::check-for-update')
     }

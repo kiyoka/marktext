@@ -4,10 +4,13 @@ import crypto from 'crypto'
 import { clipboard } from 'electron'
 import fs from 'fs-extra'
 import dayjs from 'dayjs'
-import Octokit from '@octokit/rest'
+import { Octokit } from '@octokit/rest'
 import { ensureDirSync } from 'common/filesystem'
 import { isImageFile } from 'common/filesystem/paths'
-import { dataURItoBlob } from './index'
+import cp from 'child_process'
+import { tmpdir } from 'os'
+import { unlink, writeFileSync, statSync, constants } from 'fs'
+import { isWindows, dataURItoBlob } from './index'
 import axios from '../axios'
 
 export const create = (pathname, type) => {
@@ -51,7 +54,12 @@ export const moveToRelativeFolder = async (cwd, imagePath, relativeName) => {
   await fs.move(imagePath, dstPath, { overwrite: true })
 
   // dstRelPath: relative directory name + image file name
-  const dstRelPath = normalizePath(path.join(relativeName, path.basename(imagePath)))
+  const dstRelPath = path.join(relativeName, path.basename(imagePath))
+
+  if (isWindows) {
+    // Use forward slashes for better compatibility with websites.
+    return dstRelPath.replace(/\\/g, '/')
+  }
   return dstRelPath
 }
 
@@ -100,6 +108,7 @@ export const uploadImage = async (pathname, image, preferences) => {
   const { currentUploader } = preferences
   const { owner, repo, branch } = preferences.imageBed.github
   const token = preferences.githubToken
+  const cliScript = preferences.cliScript
   const isPath = typeof image === 'string'
   const MAX_SIZE = 5 * 1024 * 1024
   let re
@@ -138,11 +147,10 @@ export const uploadImage = async (pathname, image, preferences) => {
   const uploadByGithub = (content, filename) => {
     const octokit = new Octokit({
       auth: `token ${token}`
-
     })
     const path = dayjs().format('YYYY/MM') + `/${dayjs().format('DD-HH-mm-ss')}-${filename}`
-    const message = `Upload by Mark Text at ${dayjs().format('YYYY-MM-DD HH:mm:ss')}`
-    var payload = {
+    const message = `Upload by MarkText at ${dayjs().format('YYYY-MM-DD HH:mm:ss')}`
+    const payload = {
       owner,
       repo,
       path,
@@ -153,12 +161,31 @@ export const uploadImage = async (pathname, image, preferences) => {
     if (!branch) {
       delete payload.branch
     }
-    octokit.repos.createFile(payload).then(result => {
+    octokit.repos.createOrUpdateFileContents(payload).then(result => {
       re(result.data.content.download_url)
     })
       .catch(_ => {
         rj('Upload failed, the image will be copied to the image folder')
       })
+  }
+
+  const uploadByCliScript = (filepath, name = null) => {
+    let isPath = true
+    if (typeof filepath !== 'string') {
+      isPath = false
+      const data = new Uint8Array(filepath)
+      filepath = path.join(tmpdir(), name || +new Date())
+      writeFileSync(filepath, data)
+    }
+    cp.execFile(cliScript, [filepath], (err, data) => {
+      if (!isPath) {
+        unlink(filepath)
+      }
+      if (err) {
+        return rj(err)
+      }
+      re(data.trim())
+    })
   }
 
   const notification = () => {
@@ -174,6 +201,10 @@ export const uploadImage = async (pathname, image, preferences) => {
       if (size > MAX_SIZE) {
         notification()
       } else {
+        if (currentUploader === 'cliScript') {
+          uploadByCliScript(imagePath)
+          return promise
+        }
         const imageFile = await fs.readFile(imagePath)
         const blobFile = new Blob([imageFile])
         if (currentUploader === 'smms') {
@@ -193,17 +224,34 @@ export const uploadImage = async (pathname, image, preferences) => {
     } else {
       const reader = new FileReader()
       reader.onload = async () => {
-        const blobFile = dataURItoBlob(reader.result, image.name)
-        if (currentUploader === 'smms') {
-          uploadToSMMS(blobFile)
-        } else {
-          uploadByGithub(reader.result, image.name)
+        switch (currentUploader) {
+          case 'cliScript':
+            uploadByCliScript(reader.result, image.name)
+            break
+
+          case 'smms':
+            uploadToSMMS(dataURItoBlob(reader.result, image.name))
+            break
+
+          default:
+            uploadByGithub(reader.result, image.name)
         }
       }
 
-      reader.readAsDataURL(image)
+      const readerFunction = currentUploader === 'cliScript' ? 'readAsArrayBuffer' : 'readAsDataURL'
+      reader[readerFunction](image)
     }
   }
 
   return promise
+}
+
+export const isFileExecutable = (filepath) => {
+  try {
+    const stat = statSync(filepath)
+    return stat.isFile() && (stat.mode & (constants.S_IXUSR | constants.S_IXGRP | constants.S_IXOTH)) !== 0
+  } catch (err) {
+    // err ignored
+    return false
+  }
 }
