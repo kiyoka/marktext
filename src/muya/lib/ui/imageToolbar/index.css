@@ -69,9 +69,15 @@
   margin-right: 8px;
 }
 
-.ag-image-toolbar li.item.open {
+.ag-image-toolbar li.item.open.enable {
   margin-right: 21px;
   margin-left: 0px;
+}
+
+.ag-image-toolbar li.item.open.disable {
+  margin-right: 21px;
+  margin-left: 0px;
+  opacity: 0.4;
 }
 
 .ag-image-toolbar li.item.inline {

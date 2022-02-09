@@ -1,6 +1,7 @@
 import BaseFloat from '../baseFloat'
 import { patch, h } from '../../parser/render/snabbdom'
 import icons from './config'
+import { URL_REG } from '../../config'
 
 import './index.css'
 
@@ -53,6 +54,10 @@ class ImageToolbar extends BaseFloat {
     const { icons, oldVnode, toolbarContainer, imageInfo } = this
     const { attrs } = imageInfo.token
     const dataAlign = attrs['data-align']
+    let imageIsLocal = true
+    if (URL_REG.test(imageInfo.token.src)) {
+      imageIsLocal = false
+    }
     const children = icons.map(i => {
       let icon
       let iconWrapperSelector
@@ -69,6 +74,13 @@ class ImageToolbar extends BaseFloat {
       const iconWrapper = h(iconWrapperSelector, icon)
       let itemSelector = `li.item.${i.type}`
 
+      if (i.type === 'open') {
+        if (imageIsLocal) {
+          itemSelector += '.enable'
+        } else {
+          itemSelector += '.disable'
+        }
+      }
       if (i.type === dataAlign || !dataAlign && i.type === 'inline') {
         itemSelector += '.active'
       }
