@@ -27,6 +27,7 @@ class ImageToolbar extends BaseFloat {
     this.options = opts
     this.icons = icons
     this.reference = null
+    this.realFilePath = null
     const toolbarContainer = this.toolbarContainer = document.createElement('div')
     this.container.appendChild(toolbarContainer)
     this.floatBox.classList.add('ag-image-toolbar-container')
@@ -36,8 +37,9 @@ class ImageToolbar extends BaseFloat {
   listen () {
     const { eventCenter } = this.muya
     super.listen()
-    eventCenter.subscribe('muya-image-toolbar', ({ reference, imageInfo }) => {
+    eventCenter.subscribe('muya-image-toolbar', ({ reference, imageInfo, realFilePath }) => {
       this.reference = reference
+      this.realFilePath = realFilePath
       if (reference) {
         this.imageInfo = imageInfo
         setTimeout(() => {
@@ -55,7 +57,7 @@ class ImageToolbar extends BaseFloat {
     const { attrs } = imageInfo.token
     const dataAlign = attrs['data-align']
     let imageIsLocal = true
-    if (URL_REG.test(imageInfo.token.src)) {
+    if (URL_REG.test(imageInfo.token.src) || URL_REG.test(attrs.src)) {
       imageIsLocal = false
     }
     const children = icons.map(i => {
@@ -111,6 +113,11 @@ class ImageToolbar extends BaseFloat {
     event.stopPropagation()
 
     const { imageInfo } = this
+    const { attrs } = imageInfo.token
+    let imageIsLocal = true
+    if (URL_REG.test(imageInfo.token.src) || URL_REG.test(attrs.src)) {
+      imageIsLocal = false
+    }
     switch (item.type) {
       // Delete image.
       case 'delete':
@@ -146,6 +153,12 @@ class ImageToolbar extends BaseFloat {
       case 'right': {
         this.muya.contentState.updateImage(this.imageInfo, 'data-align', item.type)
         return this.hide()
+      }
+      case 'open': {
+        if (imageIsLocal) {
+          this.muya.contentState.openImage(this.imageInfo, this.realFilePath)
+          return this.hide()
+        }
       }
     }
   }
