@@ -39,7 +39,8 @@ Expected Html
 </code></pre>
 
 Actural Html
-<pre><code class="fenced-code-block language-foo\+bar">foo</code></pre>
+<pre><code class="language-foo\+bar">foo
+</code></pre>
 
 marked.js html
 <pre><code class="language-foo\+bar">foo
@@ -133,7 +134,8 @@ Expected Html
 </code></pre>
 
 Actural Html
-<pre><code class="fenced-code-block language-f&amp;ouml;&amp;ouml;">foo</code></pre>
+<pre><code class="language-f&amp;ouml;&amp;ouml;">foo
+</code></pre>
 
 marked.js html
 <pre><code class="language-f&amp;ouml;&amp;ouml;">foo
@@ -183,7 +185,8 @@ baz</em></h1>
 
 Actural Html
 <p>  Foo <em>bar
-baz</em><br>====</p>
+baz</em>	
+====</p>
 
 marked.js html
 <p>  Foo <em>bar
@@ -308,8 +311,9 @@ Expected Html
 
 Actural Html
 <blockquote>
-<pre><code class="indented-code-block">foo
-bar</code></pre>
+<pre><code>foo
+bar
+</code></pre>
 </blockquote>
 
 marked.js html
@@ -340,9 +344,11 @@ Expected Html
 
 Actural Html
 <blockquote>
-<pre><code class="fenced-code-block">foo</code></pre>
+<pre><code>foo
+</code></pre>
 </blockquote>
-<pre><code class="fenced-code-block"></code></pre>
+<pre><code>
+</code></pre>
 
 marked.js html
 <blockquote>
@@ -461,7 +467,7 @@ Expected Html
 <p>[foo <em>[bar <a href="/uri">baz</a>](/uri)</em>](/uri)</p>
 
 Actural Html
-<p>[foo *<a href="/uri">bar <a href="/uri">baz</a></a>*](/uri)</p>
+<p>[foo <em><a href="/uri">bar <a href="/uri">baz</a></a></em>](/uri)</p>
 
 marked.js html
 <p>[foo <em><a href="/uri">bar <a href="/uri">baz</a></a></em>](/uri)</p>
@@ -499,7 +505,7 @@ Expected Html
 <p>[foo <bar attr="](baz)"></p>
 
 Actural Html
-<p>[foo <bar attr="](baz)"></p>
+<p><a href="baz">foo &lt;bar attr=&quot;</a>&quot;&gt;</p>
 
 marked.js html
 <p><a href="baz">foo &lt;bar attr=&quot;</a>&quot;&gt;</p>
@@ -518,7 +524,7 @@ Expected Html
 <p>[foo<a href="http://example.com/?search=%5D(uri)">http://example.com/?search=](uri)</a></p>
 
 Actural Html
-<p>[foo<a href="http://example.com/?search=%5D(uri)">http://example.com/?search=](uri)</a></p>
+<p><a href="uri">foo&lt;http://example.com/?search=</a>&gt;</p>
 
 marked.js html
 <p><a href="uri">foo&lt;http://example.com/?search=</a>&gt;</p>
@@ -665,7 +671,7 @@ Expected Html
 <p><img src="train.jpg" alt="foo bar" title="train &amp; tracks" /></p>
 
 Actural Html
-<p><img src="train.jpg" alt="foo bar" title="train &amp; tracks"></p>
+<p><img src="train.jpg" alt="foo *bar*" title="train &amp; tracks"></p>
 
 marked.js html
 <p><img src="train.jpg" alt="foo *bar*" title="train &amp; tracks"></p>
@@ -684,7 +690,7 @@ Expected Html
 <p><img src="/url2" alt="foo bar" /></p>
 
 Actural Html
-<p><img src="file:///url2" alt="foo ![bar](/url)"></p>
+<p><img src="/url2" alt="foo ![bar](/url)"></p>
 
 marked.js html
 <p><img src="/url2" alt="foo ![bar](/url)"></p>
@@ -703,7 +709,7 @@ Expected Html
 <p><img src="/url2" alt="foo bar" /></p>
 
 Actural Html
-<p><img src="file:///url2" alt="foo [bar](/url)"></p>
+<p><img src="/url2" alt="foo [bar](/url)"></p>
 
 marked.js html
 <p><img src="/url2" alt="foo [bar](/url)"></p>
@@ -724,7 +730,7 @@ Expected Html
 <p><img src="train.jpg" alt="foo bar" title="train &amp; tracks" /></p>
 
 Actural Html
-<p><img src="train.jpg" alt="foo bar" title="train &amp; tracks"></p>
+<p><img src="train.jpg" alt="foo *bar*" title="train &amp; tracks"></p>
 
 marked.js html
 <p><img src="train.jpg" alt="foo *bar*" title="train &amp; tracks"></p>
@@ -745,7 +751,7 @@ Expected Html
 <p><img src="train.jpg" alt="foo bar" title="train &amp; tracks" /></p>
 
 Actural Html
-<p><img src="train.jpg" alt="foo bar" title="train &amp; tracks"></p>
+<p><img src="train.jpg" alt="foo *bar*" title="train &amp; tracks"></p>
 
 marked.js html
 <p><img src="train.jpg" alt="foo *bar*" title="train &amp; tracks"></p>
@@ -766,7 +772,7 @@ Expected Html
 <p><img src="/url" alt="foo bar" title="title" /></p>
 
 Actural Html
-<p><img src="file:///url" alt="foo bar" title="title"></p>
+<p><img src="/url" alt="*foo* bar" title="title"></p>
 
 marked.js html
 <p><img src="/url" alt="*foo* bar" title="title"></p>
@@ -787,7 +793,7 @@ Expected Html
 <p><img src="/url" alt="foo bar" title="title" /></p>
 
 Actural Html
-<p><img src="file:///url" alt="foo bar" title="title"></p>
+<p><img src="/url" alt="*foo* bar" title="title"></p>
 
 marked.js html
 <p><img src="/url" alt="*foo* bar" title="title"></p>

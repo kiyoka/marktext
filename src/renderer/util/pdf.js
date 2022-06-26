@@ -1,6 +1,6 @@
 import fs from 'fs'
 import path from 'path'
-import Slugger from 'muya/lib/parser/marked/slugger'
+import { Slugger } from 'muya/lib/parser/marked'
 import { isFile } from 'common/filesystem'
 import { escapeHTML, unescapeHTML } from 'muya/lib/utils'
 import academicTheme from '@/assets/themes/export/academic.theme.css'
