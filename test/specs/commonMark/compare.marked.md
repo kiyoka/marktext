@@ -187,7 +187,8 @@ baz</em><br>====</p>
 
 marked.js html
 <p>  Foo <em>bar
-baz</em><br>====</p>
+baz</em>	
+====</p>
 
 ```
 
@@ -463,7 +464,7 @@ Actural Html
 <p>[foo *<a href="/uri">bar <a href="/uri">baz</a></a>*](/uri)</p>
 
 marked.js html
-<p>[foo *<a href="/uri">bar <a href="/uri">baz</a></a>*](/uri)</p>
+<p>[foo <em><a href="/uri">bar <a href="/uri">baz</a></a></em>](/uri)</p>
 
 ```
 

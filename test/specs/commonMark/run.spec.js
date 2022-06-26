@@ -2,7 +2,7 @@
 import { removeCustomClass, padding } from '../help'
 import { MT_MARKED_OPTIONS } from '../config'
 const fetch = require('node-fetch')
-const markedJs = require('marked')
+import { marked as markedJs } from 'marked'
 const marked = require('../../../src/muya/lib/parser/marked/index.js').default
 const HtmlDiffer = require('@markedjs/html-differ').HtmlDiffer
 const fs = require('fs')
@@ -108,7 +108,7 @@ export const writeResult = (version, specs, markedSpecs, type = 'commonmark') =>
       compareResult += 'Actural Html\n'
       compareResult += `${acturalHtml}\n`
       compareResult += 'marked.js html\n'
-      compareResult += `${markedJs(spec.markdown, { headerIds: false })}\n`
+      compareResult += `${markedJs.parse(spec.markdown, { headerIds: false })}\n`
       compareResult += '```\n\n'
     }
   })
