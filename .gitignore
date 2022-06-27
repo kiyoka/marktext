@@ -5,6 +5,7 @@ build/*
 static/themes/*
 src/muya/node_modules/
 coverage
+test/backwardCompatibility/tokentree
 .vscode
 node_modules/
 npm-debug.log
