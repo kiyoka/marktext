@@ -39,11 +39,19 @@ export const muyaTransformTokens = (tokens) => {
         }
         else {
           token = {
-              'type': token.type,
-              'headingStyle': 'atx',
-              'depth': token.depth,
-              "text": token.text
-             }
+            'type': token.type,
+            'headingStyle': 'atx',
+            'depth': token.depth,
+            "text": token.text
+          }
+        }
+        break
+      }
+      case 'hr': {
+        const marker = token.raw.replace(/\n*$/, '')
+        token = {
+          'type': token.type,
+          'marker': marker
         }
         break
       }
