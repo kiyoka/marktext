@@ -26,7 +26,7 @@ const lheading = (token) => {
 /**
  * Muya custom functions
  */
-export const muyaTransformTokens = (tokens) => {
+ const transformTokens = (tokens) => {
   let token
   let retTokens = []
   while ((token = tokens.shift())) {
@@ -65,10 +65,25 @@ export const muyaTransformTokens = (tokens) => {
         break
       }
     }
+    retTokens.push(token)
+  }
+  return retTokens
+}
+
+const dropUnusedTokens = (tokens) => {
+  let retTokens = []
+  let token
+  while ((token = tokens.shift())) {
     delete token.tokens
     delete token.raw
     retTokens.push(token)
   }
+  return retTokens
+}
+
+export const muyaTransformTokens = (tokens) => {
+  let retTokens = transformTokens(tokens)
+  retTokens = dropUnusedTokens(retTokens)
   return retTokens
 }
 
