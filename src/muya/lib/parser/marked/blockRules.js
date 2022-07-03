@@ -7,6 +7,7 @@
 
 export const block = {
   lheading: /^([^\n]+)\n {0,3}(=+|-+) *(?:\n+|$)/,
+  bullet: /^([*+-])|\d{1,9}(\.|\))/
 }
 
 

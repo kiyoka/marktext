@@ -23,6 +23,65 @@ const lheading = (token) => {
   return null
 }
 
+const judgeListType = (src) => {
+  const cap = block.bullet.exec(src)
+  if (cap) {
+    if (cap[1]) {
+      return ({
+        'listItemType': 'bullet',
+        'bulletMarkerOrDelimiter': cap[1]
+      })
+    }
+    if (cap[2]) {
+      return ({
+        'listItemType': 'order',
+        'bulletMarkerOrDelimiter': cap[2]
+      })
+    }
+  }
+  return ({
+    'listItemType': 'unknown',
+    'bulletMarkerOrDelimiter': '',
+  })
+}
+
+// list
+const list = (tokenOfList) => {
+  let retTokens = []
+  if (tokenOfList.type !== 'list') {
+    return null
+  }
+  else {
+    const listTypeInfo = judgeListType(tokenOfList.raw)
+    retTokens.push({
+      'type': 'list_start',
+      'ordered': tokenOfList.ordered,
+      'listType': tokenOfList.ordered ? 'order' : 'bullet',
+      'start': tokenOfList.start,
+      'orig': tokenOfList
+    })
+    let item
+    while ((item = tokenOfList.items.shift())) {
+      retTokens.push({
+        'listItemType': listTypeInfo.listItemType,
+        'bulletMarkerOrDelimiter': listTypeInfo.bulletMarkerOrDelimiter,
+        'type': tokenOfList.loose ? 'loose_item_start' : 'list_item_start'
+      })
+      retTokens.push({
+        'type': 'text',
+        'text': item.text
+      })
+      retTokens.push({
+        'type': 'list_item_end'
+      })
+    }
+    retTokens.push({
+      'type': 'list_end'
+    })
+  }
+  return retTokens
+}
+
 /**
  * Muya custom functions
  */
@@ -30,7 +89,6 @@ const lheading = (token) => {
   let token
   let retTokens = []
   while ((token = tokens.shift())) {
-    let newToken
     switch (token.type) {
       case 'heading': {
         const lh = lheading(token)
@@ -73,7 +131,8 @@ const lheading = (token) => {
         }
         const token2 = {
           'type': 'paragraph',
-          'text': token.text
+          'text': token.text,
+          'tokens': token.tokens
         }
         const token3 = {
           'type': 'blockquote_end'
@@ -81,6 +140,13 @@ const lheading = (token) => {
         retTokens.push(token1)
         retTokens.push(token2)
         retTokens.push(token3)
+        break
+      }
+      case 'list': {
+        const listTokens = list(token)
+        listTokens.forEach((t) => {
+          retTokens.push(t)
+        })
         break
       }
       default: {
@@ -98,6 +164,7 @@ const dropUnusedTokens = (tokens) => {
   while ((token = tokens.shift())) {
     delete token.tokens
     delete token.raw
+    delete token.orig
     retTokens.push(token)
   }
   return retTokens
