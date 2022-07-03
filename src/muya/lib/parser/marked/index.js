@@ -55,6 +55,15 @@ export const muyaTransformTokens = (tokens) => {
         }
         break
       }
+      case 'code': {
+        token = {
+          'type': token.type,
+          'codeBlockStyle': token.codeBlockStyle === 'indented' ? token.codeBlockStyle : 'fenced',
+          'lang': token.lang,
+          'text': token.text
+        }
+        break
+      }
     }
     delete token.tokens
     delete token.raw
