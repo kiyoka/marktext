@@ -45,6 +45,7 @@ const lheading = (token) => {
             "text": token.text
           }
         }
+        retTokens.push(token)
         break
       }
       case 'hr': {
@@ -53,6 +54,7 @@ const lheading = (token) => {
           'type': token.type,
           'marker': marker
         }
+        retTokens.push(token)
         break
       }
       case 'code': {
@@ -62,10 +64,30 @@ const lheading = (token) => {
           'lang': token.lang,
           'text': token.text
         }
+        retTokens.push(token)
+        break
+      }
+      case 'blockquote': {
+        const token1 = {
+          'type': 'blockquote_start'
+        }
+        const token2 = {
+          'type': 'paragraph',
+          'text': token.text
+        }
+        const token3 = {
+          'type': 'blockquote_end'
+        }
+        retTokens.push(token1)
+        retTokens.push(token2)
+        retTokens.push(token3)
+        break
+      }
+      default: {
+        retTokens.push(token)
         break
       }
     }
-    retTokens.push(token)
   }
   return retTokens
 }
