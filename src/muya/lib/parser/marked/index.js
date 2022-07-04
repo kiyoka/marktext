@@ -92,8 +92,7 @@ const paragraph = (token) => {
   if (token.tokens.length > 0) {
     const lst = transformTokens(token.tokens)
     lst.forEach((t) => {
-      if (t.type === 'text' || t.type === 'em' || t.type === 'codespan' || t.type === 'link') {
-      } else {
+      if (!(t.type === 'text' || t.type === 'em' || t.type === 'codespan' || t.type === 'link')) {
         retTokens.push(t)
       }
     })
