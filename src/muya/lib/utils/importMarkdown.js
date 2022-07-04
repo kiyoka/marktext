@@ -6,7 +6,7 @@
 import StateRender from '../parser/render'
 import { tokenizer } from '../parser'
 import { getImageInfo } from '../utils'
-import { Lexer } from '../parser/marked'
+import { Lexer, muyaTransformTokens } from '../parser/marked'
 import ExportMarkdown from './exportMarkdown'
 import TurndownService, { usePluginAddRules } from './turndownService'
 import { loadLanguage } from '../prism/index'
@@ -86,12 +86,12 @@ const importRegister = ContentState => {
       trimUnnecessaryCodeBlockEmptyLines
     } = this.muya.options
 
-    const tokens = new Lexer({
+    const tokens = muyaTransformTokens(new Lexer({
       disableInline: true,
       footnote,
       isGitlabCompatibilityEnabled,
       superSubScript
-    }).lex(markdown)
+    }).lex(markdown))
 
     let token
     let block

@@ -28,20 +28,20 @@ const judgeListType = (src) => {
   if (cap) {
     if (cap[1]) {
       return ({
-        'listItemType': 'bullet',
-        'bulletMarkerOrDelimiter': cap[1]
+        listItemType: 'bullet',
+        bulletMarkerOrDelimiter: cap[1]
       })
     }
     if (cap[2]) {
       return ({
-        'listItemType': 'order',
-        'bulletMarkerOrDelimiter': cap[2]
+        listItemType: 'order',
+        bulletMarkerOrDelimiter: cap[2]
       })
     }
   }
   return ({
-    'listItemType': 'unknown',
-    'bulletMarkerOrDelimiter': '',
+    listItemType: 'unknown',
+    bulletMarkerOrDelimiter: ''
   })
 }
 
@@ -50,33 +50,44 @@ const list = (tokenOfList) => {
   let retTokens = []
   if (tokenOfList.type !== 'list') {
     return null
-  }
-  else {
+  } else {
     const listTypeInfo = judgeListType(tokenOfList.raw)
     retTokens.push({
-      'type': 'list_start',
-      'ordered': tokenOfList.ordered,
-      'listType': tokenOfList.ordered ? 'order' : 'bullet',
-      'start': tokenOfList.start,
-      'orig': tokenOfList
+      type: 'list_start',
+      ordered: tokenOfList.ordered,
+      listType: tokenOfList.ordered ? 'order' : 'bullet',
+      start: tokenOfList.start,
+      orig: tokenOfList
     })
     let item
     while ((item = tokenOfList.items.shift())) {
       retTokens.push({
-        'listItemType': listTypeInfo.listItemType,
-        'bulletMarkerOrDelimiter': listTypeInfo.bulletMarkerOrDelimiter,
-        'type': tokenOfList.loose ? 'loose_item_start' : 'list_item_start'
+        listItemType: listTypeInfo.listItemType,
+        bulletMarkerOrDelimiter: listTypeInfo.bulletMarkerOrDelimiter,
+        type: tokenOfList.loose ? 'loose_item_start' : 'list_item_start'
       })
+      if ((item.type === 'list_item') && (item.tokens.length > 0)) {
+        retTokens.push({
+          type: 'text',
+          text: item.tokens[0].text,
+          orig: item
+        })
+        if (item.tokens.length > 1) {
+          if (item.tokens[1].type === 'list') {
+            // nested list
+            const lst = list(item.tokens[1])
+            lst.forEach((t) => {
+              retTokens.push(t)
+            })
+          }
+        }
+      }
       retTokens.push({
-        'type': 'text',
-        'text': item.text
-      })
-      retTokens.push({
-        'type': 'list_item_end'
+        type: 'list_item_end'
       })
     }
     retTokens.push({
-      'type': 'list_end'
+      type: 'list_end'
     })
   }
   return retTokens
@@ -85,7 +96,7 @@ const list = (tokenOfList) => {
 /**
  * Muya custom functions
  */
- const transformTokens = (tokens) => {
+const transformTokens = (tokens) => {
   let token
   let retTokens = []
   while ((token = tokens.shift())) {
@@ -94,13 +105,12 @@ const list = (tokenOfList) => {
         const lh = lheading(token)
         if (lh) {
           token = lh
-        }
-        else {
+        } else {
           token = {
-            'type': token.type,
-            'headingStyle': 'atx',
-            'depth': token.depth,
-            "text": token.text
+            type: token.type,
+            headingStyle: 'atx',
+            depth: token.depth,
+            text: token.text
           }
         }
         retTokens.push(token)
@@ -109,33 +119,33 @@ const list = (tokenOfList) => {
       case 'hr': {
         const marker = token.raw.replace(/\n*$/, '')
         token = {
-          'type': token.type,
-          'marker': marker
+          type: token.type,
+          marker: marker
         }
         retTokens.push(token)
         break
       }
       case 'code': {
         token = {
-          'type': token.type,
-          'codeBlockStyle': token.codeBlockStyle === 'indented' ? token.codeBlockStyle : 'fenced',
-          'lang': token.lang,
-          'text': token.text
+          type: token.type,
+          codeBlockStyle: token.codeBlockStyle === 'indented' ? token.codeBlockStyle : 'fenced',
+          lang: token.lang,
+          text: token.text
         }
         retTokens.push(token)
         break
       }
       case 'blockquote': {
         const token1 = {
-          'type': 'blockquote_start'
+          type: 'blockquote_start'
         }
         const token2 = {
-          'type': 'paragraph',
-          'text': token.text,
-          'tokens': token.tokens
+          type: 'paragraph',
+          text: token.text,
+          tokens: token.tokens
         }
         const token3 = {
-          'type': 'blockquote_end'
+          type: 'blockquote_end'
         }
         retTokens.push(token1)
         retTokens.push(token2)

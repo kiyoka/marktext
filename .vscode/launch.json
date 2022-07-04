@@ -2,6 +2,12 @@
   "version": "0.2.0",
   "configurations": [
     {
+      "command": "yarn run test:compat",
+      "name": "yarn run test:compat",
+      "request": "launch",
+      "type": "node-terminal"
+    },
+    {
       "type": "node",
       "request": "launch",
       "name": "Launch MarkText",
