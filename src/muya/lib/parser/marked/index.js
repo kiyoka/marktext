@@ -67,20 +67,10 @@ const list = (tokenOfList) => {
         type: tokenOfList.loose ? 'loose_item_start' : 'list_item_start'
       })
       if ((item.type === 'list_item') && (item.tokens.length > 0)) {
-        retTokens.push({
-          type: 'text',
-          text: item.tokens[0].text,
-          orig: item
+        const lst = transformTokens(item.tokens)
+        lst.forEach((t) => {
+          retTokens.push(t)
         })
-        if (item.tokens.length > 1) {
-          if (item.tokens[1].type === 'list') {
-            // nested list
-            const lst = list(item.tokens[1])
-            lst.forEach((t) => {
-              retTokens.push(t)
-            })
-          }
-        }
       }
       retTokens.push({
         type: 'list_item_end'
@@ -88,6 +78,24 @@ const list = (tokenOfList) => {
     }
     retTokens.push({
       type: 'list_end'
+    })
+  }
+  return retTokens
+}
+
+const paragraph = (token) => {
+  let retTokens = []
+  retTokens.push({
+    type: token.type,
+    text: token.text.replace(/\n*$/, '')
+  })
+  if (token.tokens.length > 0) {
+    const lst = transformTokens(token.tokens)
+    lst.forEach((t) => {
+      if (t.type === 'text' || t.type === 'em' || t.type === 'codespan' || t.type === 'link') {
+      } else {
+        retTokens.push(t)
+      }
     })
   }
   return retTokens
@@ -136,20 +144,16 @@ const transformTokens = (tokens) => {
         break
       }
       case 'blockquote': {
-        const token1 = {
+        retTokens.push({
           type: 'blockquote_start'
-        }
-        const token2 = {
-          type: 'paragraph',
-          text: token.text,
-          tokens: token.tokens
-        }
-        const token3 = {
+        })
+        const listTokens = transformTokens(token.tokens)
+        listTokens.forEach((t) => {
+          retTokens.push(t)
+        })
+        retTokens.push({
           type: 'blockquote_end'
-        }
-        retTokens.push(token1)
-        retTokens.push(token2)
-        retTokens.push(token3)
+        })
         break
       }
       case 'list': {
@@ -157,6 +161,19 @@ const transformTokens = (tokens) => {
         listTokens.forEach((t) => {
           retTokens.push(t)
         })
+        break
+      }
+      case 'paragraph': {
+        const listTokens = paragraph(token)
+        listTokens.forEach((t) => {
+          retTokens.push(t)
+        })
+        break
+      }
+      case 'escape': {
+        break
+      }
+      case 'image': {
         break
       }
       default: {
