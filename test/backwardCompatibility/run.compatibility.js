@@ -9,12 +9,13 @@ const loadMarkdownContent = pathname => {
 }
 
 // save tokentree as json file.
-const saveTokentrees = function(name,markdownStr) {
+const saveTokentrees = function (name, markdownStr) {
   const options = {
     disableInline: true,
     footnote: false,
     isGitlabCompatibilityEnabled: false,
-    superSubScript: false
+    superSubScript: false,
+    gfm: true
   }
 
   const tokensByOld     = new oldLexer(options).lex(markdownStr)

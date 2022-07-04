@@ -100,6 +100,27 @@ const paragraph = (token) => {
   return retTokens
 }
 
+const table = (token) => {
+  let header = []
+  token.header.forEach((h) => {
+    header.push(h.text)
+  })
+  let cells = []
+  token.rows.forEach((columns) => {
+    let lines = []
+    columns.forEach((cell) => {
+      lines.push(cell.text)
+    })
+    cells.push(lines)
+  })
+  return ({
+    type: 'table',
+    header: header,
+    align: token.align,
+    cells: cells
+  })
+}
+
 /**
  * Muya custom functions
  */
@@ -169,10 +190,26 @@ const transformTokens = (tokens) => {
         })
         break
       }
+      case 'table': {
+        retTokens.push(table(token))
+        break
+      }
       case 'escape': {
         break
       }
       case 'image': {
+        break
+      }
+      case 'del': {
+        break
+      }
+      case 'html': {
+        break
+      }
+      case 'strong': {
+        break
+      }
+      case 'br': {
         break
       }
       default: {
