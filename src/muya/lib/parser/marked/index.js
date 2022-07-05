@@ -226,8 +226,10 @@ const dropUnusedTokens = (tokens) => {
   let token
   while ((token = tokens.shift())) {
     delete token.tokens
-    delete token.raw
     delete token.orig
+    if (token.type !== 'space') {
+      delete token.raw
+    }
     retTokens.push(token)
   }
   return retTokens
