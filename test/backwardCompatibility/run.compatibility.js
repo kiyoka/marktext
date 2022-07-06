@@ -1,7 +1,7 @@
 import fs from 'fs'
 import path from 'path'
-import { Lexer as oldLexer } from '../../oldsrc/muya/lib/parser/marked'
-import { Lexer as newLexer, muyaTransformTokens } from '../../src/muya/lib/parser/marked'
+import { Lexer as OldLexer } from '../../oldsrc/muya/lib/parser/marked'
+import { Lexer as NewLexer, muyaTransformTokens } from '../../src/muya/lib/parser/marked'
 
 const loadMarkdownContent = pathname => {
   // Load file and ensure LF line endings.
@@ -18,28 +18,36 @@ const saveTokentrees = function (name, markdownStr) {
     gfm: true
   }
 
-  const tokensByOld     = new oldLexer(options).lex(markdownStr)
-  const tokensByNewTemp = new newLexer(options).lex(markdownStr)
+  const tokensByOld = new OldLexer(options).lex(markdownStr)
+  const tokensByNewTemp = new NewLexer(options).lex(markdownStr)
   const tokensByNew = muyaTransformTokens(tokensByNewTemp)
 
   const basePath = 'test/backwardCompatibility/tokentree'
-  const strOld = JSON.stringify(tokensByOld,null,' ')
-  fs.mkdir(path.resolve(basePath,"old"), (err) => {})
-  fs.mkdir(path.resolve(basePath,"new"), (err) => {})
-  fs.writeFileSync(path.resolve(basePath,"old/" + name + ".json"),strOld)
-  const strNew = JSON.stringify(tokensByNew,null,' ')
-  fs.writeFileSync(path.resolve(basePath,"new/" + name + ".json"),strNew)
+  const strOld = JSON.stringify(tokensByOld, null, ' ')
+  fs.mkdir(path.resolve(basePath, 'old'), (err) => {
+    if (err) {
+      console.error(err)
+    }
+  })
+  fs.mkdir(path.resolve(basePath, 'new'), (err) => {
+    if (err) {
+      console.error(err)
+    }
+  })
+  fs.writeFileSync(path.resolve(basePath, 'old/' + name + '.json'), strOld)
+  const strNew = JSON.stringify(tokensByNew, null, ' ')
+  fs.writeFileSync(path.resolve(basePath, 'new/' + name + '.json'), strNew)
 }
 
 // save results
-saveTokentrees('common.BasicTextFormatting',    loadMarkdownContent('common/BasicTextFormatting.md'))
-saveTokentrees('common.Blockquotes',            loadMarkdownContent('common/Blockquotes.md'))
-saveTokentrees('common.CodeBlocks',             loadMarkdownContent('common/CodeBlocks.md'))
-saveTokentrees('common.Escapes',                loadMarkdownContent('common/Escapes.md'))
-saveTokentrees('common.Headings',               loadMarkdownContent('common/Headings.md'))
-saveTokentrees('common.Images',                 loadMarkdownContent('common/Images.md'))
-saveTokentrees('common.Links',                  loadMarkdownContent('common/Links.md'))
-saveTokentrees('common.Lists',                  loadMarkdownContent('common/Lists.md'))
-saveTokentrees('gfm.BasicTextFormatting',       loadMarkdownContent('gfm/BasicTextFormatting.md'))
-saveTokentrees('gfm.Lists',                     loadMarkdownContent('gfm/Lists.md'))
-saveTokentrees('gfm.Tables',                    loadMarkdownContent('gfm/Tables.md'))
+saveTokentrees('common.BasicTextFormatting', loadMarkdownContent('common/BasicTextFormatting.md'))
+saveTokentrees('common.Blockquotes', loadMarkdownContent('common/Blockquotes.md'))
+saveTokentrees('common.CodeBlocks', loadMarkdownContent('common/CodeBlocks.md'))
+saveTokentrees('common.Escapes', loadMarkdownContent('common/Escapes.md'))
+saveTokentrees('common.Headings', loadMarkdownContent('common/Headings.md'))
+saveTokentrees('common.Images', loadMarkdownContent('common/Images.md'))
+saveTokentrees('common.Links', loadMarkdownContent('common/Links.md'))
+saveTokentrees('common.Lists', loadMarkdownContent('common/Lists.md'))
+saveTokentrees('gfm.BasicTextFormatting', loadMarkdownContent('gfm/BasicTextFormatting.md'))
+saveTokentrees('gfm.Lists', loadMarkdownContent('gfm/Lists.md'))
+saveTokentrees('gfm.Tables', loadMarkdownContent('gfm/Tables.md'))

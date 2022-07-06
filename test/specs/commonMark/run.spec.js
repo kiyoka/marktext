@@ -1,8 +1,8 @@
 // This file is copy from marked and modified.
 import { removeCustomClass, padding } from '../help'
 import { MT_MARKED_OPTIONS } from '../config'
-const fetch = require('node-fetch')
 import { marked as markedJs } from 'marked'
+const fetch = require('node-fetch')
 const marked = require('../../../src/muya/lib/parser/marked/index.js').default
 const HtmlDiffer = require('@markedjs/html-differ').HtmlDiffer
 const fs = require('fs')
