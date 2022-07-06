@@ -45,6 +45,38 @@ const judgeListType = (src) => {
   })
 }
 
+const groupingList = (items) => {
+  let lastTask = 'none'
+  let retGroups = []
+  let group = {
+    task: 'none',
+    items: []
+  }
+  let item
+  while ((item = items.shift())) {
+    const currentTask = item.task ? 'task' : 'bullet'
+    if (group.task === 'none') {
+      group.task = currentTask
+      group.items.push(item)
+    } else if (currentTask === lastTask) {
+      group.items.push(item)
+    } else if (group.items.length > 0) {
+      retGroups.push(group)
+      group = {
+        task: 'none',
+        items: []
+      }
+      group.task = currentTask
+      group.items.push(item)
+    }
+    lastTask = currentTask
+  }
+  if (group.items.length > 0) {
+    retGroups.push(group)
+  }
+  return retGroups
+}
+
 // list
 const list = (tokenOfList) => {
   let retTokens = []
@@ -52,32 +84,36 @@ const list = (tokenOfList) => {
     return null
   } else {
     const listTypeInfo = judgeListType(tokenOfList.raw)
-    retTokens.push({
-      type: 'list_start',
-      ordered: tokenOfList.ordered,
-      listType: tokenOfList.ordered ? 'order' : 'bullet',
-      start: tokenOfList.start,
-      orig: tokenOfList
-    })
-    let item
-    while ((item = tokenOfList.items.shift())) {
+    const groups = groupingList(tokenOfList.items)
+    groups.forEach((group) => {
       retTokens.push({
-        listItemType: listTypeInfo.listItemType,
-        bulletMarkerOrDelimiter: listTypeInfo.bulletMarkerOrDelimiter,
-        type: tokenOfList.loose ? 'loose_item_start' : 'list_item_start'
+        type: 'list_start',
+        ordered: tokenOfList.ordered,
+        listType: tokenOfList.ordered ? 'order' : group.task,
+        start: tokenOfList.start,
+        orig: tokenOfList
       })
-      if ((item.type === 'list_item') && (item.tokens.length > 0)) {
-        const lst = transformTokens(item.tokens)
-        lst.forEach((t) => {
-          retTokens.push(t)
+      let item
+      while ((item = group.items.shift())) {
+        retTokens.push({
+          checked: item.checked,
+          listItemType: tokenOfList.ordered ? 'order' : group.task,
+          bulletMarkerOrDelimiter: listTypeInfo.bulletMarkerOrDelimiter,
+          type: tokenOfList.loose ? 'loose_item_start' : 'list_item_start'
+        })
+        if ((item.type === 'list_item') && (item.tokens.length > 0)) {
+          const lst = transformTokens(item.tokens)
+          lst.forEach((t) => {
+            retTokens.push(t)
+          })
+        }
+        retTokens.push({
+          type: 'list_item_end'
         })
       }
       retTokens.push({
-        type: 'list_item_end'
+        type: 'list_end'
       })
-    }
-    retTokens.push({
-      type: 'list_end'
     })
   }
   return retTokens
@@ -92,7 +128,7 @@ const paragraph = (token) => {
   if (token.tokens.length > 0) {
     const lst = transformTokens(token.tokens)
     lst.forEach((t) => {
-      if (!(t.type === 'text' || t.type === 'em' || t.type === 'codespan' || t.type === 'link')) {
+      if (!(t.type === 'text' || t.type === 'em' || t.type === 'codespan' || t.type === 'link' || t.type === 'html')) {
         retTokens.push(t)
       }
     })
