@@ -203,9 +203,6 @@ const transformTokens = (tokens) => {
       case 'del': {
         break
       }
-      case 'html': {
-        break
-      }
       case 'strong': {
         break
       }
@@ -227,9 +224,7 @@ const dropUnusedTokens = (tokens) => {
   while ((token = tokens.shift())) {
     delete token.tokens
     delete token.orig
-    if (token.type !== 'space') {
-      delete token.raw
-    }
+    delete token.raw
     retTokens.push(token)
   }
   return retTokens
