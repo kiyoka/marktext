@@ -106,6 +106,11 @@ const list = (tokenOfList) => {
           lst.forEach((t) => {
             retTokens.push(t)
           })
+        } else {
+          retTokens.push({
+            type: 'text',
+            text: ''
+          })
         }
         retTokens.push({
           type: 'list_item_end'
@@ -121,6 +126,7 @@ const list = (tokenOfList) => {
 
 const paragraph = (token) => {
   let retTokens = []
+  let linkTokens = []
   retTokens.push({
     type: token.type,
     text: token.text.replace(/\n*$/, '')
@@ -128,10 +134,39 @@ const paragraph = (token) => {
   if (token.tokens.length > 0) {
     const lst = transformTokens(token.tokens)
     lst.forEach((t) => {
+      if (t.type === 'link') {
+        linkTokens.push(t)
+      }
+    })
+    lst.forEach((t) => {
       if (!(t.type === 'text' || t.type === 'em' || t.type === 'codespan' || t.type === 'link' || t.type === 'html')) {
         retTokens.push(t)
       }
     })
+  }
+
+  // convert RefLinks to paragraph
+  if (linkTokens.length > 0) {
+    let textArray = []
+    linkTokens.forEach((t) => {
+      const reflink1 = /(\[[a-zA-Z0-9 ]+\])(\[[0-9]+\])/
+      const cap1 = reflink1.exec(t.raw)
+      if (cap1) {
+        textArray.push(cap1[2] + ': ' + t.href)
+      } else {
+        const reflink2 = /(\[[a-zA-Z0-9 ]+\])(\[\])/
+        const cap2 = reflink2.exec(t.raw)
+        if (cap2) {
+          textArray.push(cap2[1] + ': ' + t.href)
+        }
+      }
+    })
+    if (textArray.length > 0) {
+      retTokens.push({
+        type: 'paragraph',
+        text: textArray.join('\n')
+      })
+    }
   }
   return retTokens
 }

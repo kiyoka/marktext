@@ -24,16 +24,20 @@ const saveTokentrees = function (name, markdownStr) {
 
   const basePath = 'test/backwardCompatibility/tokentree'
   const strOld = JSON.stringify(tokensByOld, null, ' ')
-  fs.mkdir(path.resolve(basePath, 'old'), (err) => {
-    if (err) {
-      console.error(err)
-    }
-  })
-  fs.mkdir(path.resolve(basePath, 'new'), (err) => {
-    if (err) {
-      console.error(err)
-    }
-  })
+  if (!fs.existsSync(path.resolve(basePath, 'old'))) {
+    fs.mkdir(path.resolve(basePath, 'old'), (err) => {
+      if (err) {
+        console.error(err)
+      }
+    })
+  }
+  if (!fs.existsSync(path.resolve(basePath, 'new'))) {
+    fs.mkdir(path.resolve(basePath, 'new'), (err) => {
+      if (err) {
+        console.error(err)
+      }
+    })
+  }
   fs.writeFileSync(path.resolve(basePath, 'old/' + name + '.json'), strOld)
   const strNew = JSON.stringify(tokensByNew, null, ' ')
   fs.writeFileSync(path.resolve(basePath, 'new/' + name + '.json'), strNew)
