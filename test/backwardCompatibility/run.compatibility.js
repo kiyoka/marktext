@@ -1,7 +1,7 @@
 import fs from 'fs'
 import path from 'path'
 import { Lexer as OldLexer } from '../../oldsrc/muya/lib/parser/marked'
-import { Lexer as NewLexer, muyaTransformTokens } from '../../src/muya/lib/parser/marked'
+import { Lexer as NewLexer, muyaTransformTokens, footnoteBlock } from '../../src/muya/lib/parser/marked'
 
 const loadMarkdownContent = pathname => {
   // Load file and ensure LF line endings.
@@ -9,14 +9,15 @@ const loadMarkdownContent = pathname => {
 }
 
 // save tokentree as json file.
-const saveTokentrees = function (name, markdownStr) {
-  const options = {
+const saveTokentrees = function (name, markdownStr, argOptions) {
+  let options = {
     disableInline: true,
     footnote: false,
     isGitlabCompatibilityEnabled: false,
     superSubScript: false,
     gfm: true
   }
+  Object.assign(options, argOptions)
 
   const tokensByOld = new OldLexer(options).lex(markdownStr)
   const tokensByNewTemp = new NewLexer(options).lex(markdownStr)
@@ -44,14 +45,17 @@ const saveTokentrees = function (name, markdownStr) {
 }
 
 // save results
-saveTokentrees('common.BasicTextFormatting', loadMarkdownContent('common/BasicTextFormatting.md'))
-saveTokentrees('common.Blockquotes', loadMarkdownContent('common/Blockquotes.md'))
-saveTokentrees('common.CodeBlocks', loadMarkdownContent('common/CodeBlocks.md'))
-saveTokentrees('common.Escapes', loadMarkdownContent('common/Escapes.md'))
-saveTokentrees('common.Headings', loadMarkdownContent('common/Headings.md'))
-saveTokentrees('common.Images', loadMarkdownContent('common/Images.md'))
-saveTokentrees('common.Links', loadMarkdownContent('common/Links.md'))
-saveTokentrees('common.Lists', loadMarkdownContent('common/Lists.md'))
-saveTokentrees('gfm.BasicTextFormatting', loadMarkdownContent('gfm/BasicTextFormatting.md'))
-saveTokentrees('gfm.Lists', loadMarkdownContent('gfm/Lists.md'))
-saveTokentrees('gfm.Tables', loadMarkdownContent('gfm/Tables.md'))
+if (false) {
+saveTokentrees('common.BasicTextFormatting', loadMarkdownContent('common/BasicTextFormatting.md'), {})
+saveTokentrees('common.Blockquotes', loadMarkdownContent('common/Blockquotes.md'), {})
+saveTokentrees('common.CodeBlocks', loadMarkdownContent('common/CodeBlocks.md'), {})
+saveTokentrees('common.Escapes', loadMarkdownContent('common/Escapes.md'), {})
+saveTokentrees('common.Headings', loadMarkdownContent('common/Headings.md'), {})
+saveTokentrees('common.Images', loadMarkdownContent('common/Images.md'), {})
+saveTokentrees('common.Links', loadMarkdownContent('common/Links.md'), {})
+saveTokentrees('common.Lists', loadMarkdownContent('common/Lists.md'), {})
+saveTokentrees('gfm.BasicTextFormatting', loadMarkdownContent('gfm/BasicTextFormatting.md'), {})
+saveTokentrees('gfm.Lists', loadMarkdownContent('gfm/Lists.md'), {})
+saveTokentrees('gfm.Tables', loadMarkdownContent('gfm/Tables.md'), {})
+}
+saveTokentrees('other.Footnotes', loadMarkdownContent('other/Footnotes.md'), { footnote: true, extensions: { block: [footnoteBlock] }})

@@ -261,6 +261,20 @@ const transformTokens = (tokens) => {
         })
         break
       }
+      case 'footnote' : {
+        retTokens.push({
+          type: 'footnote_start',
+          identifier: token.identifier
+        })
+        retTokens.push({
+          type: 'paragraph',
+          text: token.text
+        })
+        retTokens.push({
+          type: 'footnote_end'
+        })
+        break
+      }
       case 'table': {
         retTokens.push(table(token))
         break
@@ -305,6 +319,28 @@ export const muyaTransformTokens = (tokens) => {
   let retTokens = transformTokens(tokens)
   retTokens = dropUnusedTokens(retTokens)
   return retTokens
+}
+
+export const footnoteBlock = (src, tokens) => {
+  const cap = block.footnote.exec(src)
+  if (cap) {
+    /* eslint-disable no-useless-escape */
+    // Remove the footnote identifer prefix. eg: `[^identifier]: `.
+    src = cap[0].replace(/^\[\^[^\^\[\]\s]+?(?<!\\)\]:\s*/gm, '')
+    // Remove the four whitespace before each block of footnote.
+    src = src.replace(/\n {4}(?=[^\s])/g, '\n')
+    // Trim \n
+    src = src.replace(/[\n]+$/, '')
+    /* eslint-enable no-useless-escape */
+    const token = {
+      type: 'footnote',
+      raw: cap[0],
+      identifier: cap[1],
+      text: src
+    }
+    return token
+  }
+  return null
 }
 
 export {

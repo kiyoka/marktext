@@ -1,9 +1,10 @@
-import { Lexer } from '../../../src/muya/lib/parser/marked'
+import { Lexer, footnoteBlock } from '../../../src/muya/lib/parser/marked'
 
 const parseMarkdown = markdown => {
   const lexer = new Lexer({
     disableInline: true,
-    footnote: true
+    footnote: true,
+    extensions: { block: [footnoteBlock] }
   })
   return lexer.lex(markdown)
 }
